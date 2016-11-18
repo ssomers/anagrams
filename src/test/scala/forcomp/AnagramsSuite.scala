@@ -1,14 +1,12 @@
 package forcomp
 
-import org.scalatest.FunSuite
-
+import forcomp.Anagrams._
 import org.junit.runner.RunWith
+import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 
-import Anagrams._
-
 @RunWith(classOf[JUnitRunner])
-class AnagramsSuite extends FunSuite  {
+class AnagramsSuite extends FunSuite {
 
   test("wordOccurrences: abcd") {
     assert(wordOccurrences("abcd") === List(('a', 1), ('b', 1), ('c', 1), ('d', 1)))
@@ -114,5 +112,12 @@ class AnagramsSuite extends FunSuite  {
     )
     assert(sentenceAnagrams(sentence).toSet === anas.toSet)
   }
+}
 
+@RunWith(classOf[JUnitRunner])
+class AnagramsBench extends FunSuite {
+  test("sentence anagrams: Linux rulez") {
+    val sentence = List("Linux", "rulez")
+    sentenceAnagrams(sentence)
+  }
 }

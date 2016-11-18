@@ -55,12 +55,9 @@ object Anagrams {
     *
     */
   lazy val dictionaryByOccurrences: Map[Occurrences, List[Word]] = {
-    val d2: Map[Word, Occurrences] = (for (w <- dictionary) yield (w, wordOccurrences(w))).toMap
-    val d3: Map[Occurrences, Map[Word, Occurrences]] = d2.groupBy((t: (Word, Occurrences)) => {
-      val (w, o) = t
-      o
-    })
-    d3.mapValues((v: Map[Word, Occurrences]) => v.keys.toList)
+    val d2: List[(Word, Occurrences)] = (for (w <- dictionary) yield (w, wordOccurrences(w)))
+    d2.groupBy(_._2).mapValues(_.map(_._1))
+    //d2.groupBy(_._2).map {case (o,pairs) => (o,pairs.map(_._1))}
   }
 
 
@@ -168,7 +165,10 @@ object Anagrams {
     }
     def subsentences(occurrences: Occurrences): List[Sentence] = {
       val oc = combinations(occurrences)
-      for (o <- oc if (dbo.contains(o)); subsentence <- subsentencesAfterPrefix(occurrences, o); word <- dbo(o)) yield word :: subsentence
+      for (o <- oc;
+           word <- dbo.getOrElse(o, Nil);
+           subsentence <- subsentencesAfterPrefix(occurrences, o)
+      ) yield word :: subsentence
     }
     val l = subsentences(so)
     if (l == Nil) List(List()) else l
