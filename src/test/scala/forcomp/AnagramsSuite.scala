@@ -118,6 +118,11 @@ class AnagramsSuite extends FunSuite {
 class AnagramsBench extends FunSuite {
   test("sentence anagrams: Linux rulez") {
     val sentence = List("Linux", "rulez")
-    sentenceAnagrams(sentence)
+    assert(sentenceAnagrams(sentence).length === 20)
+  }
+
+  test("sentence anagrams: cat") {
+    val sentence = List("bold", "grumpy", "cat")
+    assert(sentenceAnagrams(sentence).length === 30198)
   }
 }
