@@ -83,7 +83,7 @@ class AnagramsSuite extends FunSuite {
 
   test("sentence anagrams: eat") {
     val sentence = List("eat")
-    assert(sentenceAnagrams(sentence) === List(List("tea"), List("eat"), List("ate")))
+    assert(sentenceAnagrams(sentence).toSet === List(List("tea"), List("eat"), List("ate")).toSet)
   }
 
   test("sentence anagrams: Linux rulez") {
