@@ -1,3 +1,4 @@
+from collections import defaultdict
 import os
 import time
 
@@ -6,10 +7,10 @@ def loadDictionary():
         return [line.rstrip() for line in f.readlines()]
 
 def wordOccurrences(w):
-    occ = {}
+    occ = defaultdict(int)
     for c in w:
         c = c.lower()
-        occ[c] = occ.get(c, 0) + 1
+        occ[c] += 1
 
     l = ()
     for k in sorted(occ.keys()):
@@ -20,10 +21,10 @@ def sentenceOccurrences(s):
     return wordOccurrences(''.join(s))
 
 def readDictionaryByOccurrences():
-    mo = {}
+    mo = defaultdict(tuple)
     for w in loadDictionary():
         occ = wordOccurrences(w)
-        mo[occ] = mo.get(occ, ()) + (w,)
+        mo[occ] += (w,)
     return mo
 
 def wordAnagrams(word):
