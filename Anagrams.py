@@ -35,7 +35,7 @@ def combinations(occurrences):
         return [()]
     c,maxo = occurrences[0]
     crest = combinations(occurrences[1:])
-    return [((c,o),) + cr for o in range(1, maxo+1) for cr in crest] + crest
+    return crest + [((c,o),) + cr for o in range(1, maxo+1) for cr in crest]
 
 def subtract(x, y):
     if len(y) == 0:
