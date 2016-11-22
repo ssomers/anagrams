@@ -1,6 +1,8 @@
 from collections import defaultdict
+import cProfile
 import os
-import time
+import timeit
+import unittest
 
 def loadDictionary():
     with open(os.path.join("src", "main", "resources", "forcomp", "linuxwords.txt")) as f:
@@ -9,6 +11,7 @@ def loadDictionary():
 def wordOccurrences(w):
     occ = defaultdict(int)
     for c in w:
+        #if c.isalpha():
         c = c.lower()
         occ[c] += 1
 
@@ -20,12 +23,15 @@ def wordOccurrences(w):
 def sentenceOccurrences(s):
     return wordOccurrences(''.join(s))
 
+dictionaryByOccurrences = None
+
 def readDictionaryByOccurrences():
-    mo = defaultdict(tuple)
+    #print("readDictionaryByOccurrences")
+    global dictionaryByOccurrences
+    dictionaryByOccurrences = defaultdict(tuple)
     for w in loadDictionary():
         occ = wordOccurrences(w)
-        mo[occ] += (w,)
-    return mo
+        dictionaryByOccurrences[occ] += (w,)
 
 def wordAnagrams(word):
     dictionaryByOccurrences[wordOccurrences(word)]
@@ -70,18 +76,22 @@ def sentenceAnagrams(sentence):
     else:
         return l
 
-class Stopwatch:
-    def __init__(self):
-        self.before = time.time()
-    def time(self, descr):
-        now = time.time()
-        print("%.2fs %s" % (now - self.before, descr))
-        self.before = time.time()
+class TestAnagrams(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        readDictionaryByOccurrences()
 
-sw = Stopwatch()
-dictionaryByOccurrences = readDictionaryByOccurrences()
-sw.time("reading dict")
-for i in range(3):
-    a = sentenceAnagrams(["bold","grumpy","cat"])
-    assert(len(a) == 30198)
-    sw.time("finding anagrams")
+    def test_ate(self):
+        self.assertEqual(sentenceAnagrams(["eat"]), [["ate"], ["eat"], ["tea"]])
+    def test_cat(self):
+        a = sentenceAnagrams(["bold","grumpy","cat"])
+        self.assertEqual(len(a), 30198)
+
+#unittest.main()
+if __name__ == "__main__":
+    for s in timeit.repeat(readDictionaryByOccurrences, number=1, repeat=1):
+        print("{:6,.3f}s prep".format(s))
+
+    for N,sentence in [(100, ["grumpy","cat"]), (1, ["bold","grumpy","cat"])]:
+        for s in timeit.repeat(lambda: sentenceAnagrams(sentence), number=N, repeat=(N > 1 and 3 or 1)):
+            print("{:6,.3f}s {:}".format(s / N, ' '.join(sentence)))
