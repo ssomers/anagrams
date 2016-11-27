@@ -145,10 +145,12 @@ struct AnagramFinder {
         int maxo = occurrences[start].second;
         std::vector<Occurrences> crest;
         combinations(occurrences, start + 1, crest);
+        result.reserve(crest.size() * (1 + maxo));
         std::copy(crest.begin(), crest.end(), std::back_inserter(result));
         for (int o = 1; o <= maxo; ++o) {
             for (auto const& cr : crest) {
                 Occurrences newOcc;
+                newOcc.reserve(1 + cr.size());
                 newOcc.push_back(std::make_pair(c, o));
                 std::copy(cr.begin(), cr.end(), std::back_inserter(newOcc));
                 result.push_back(newOcc);
