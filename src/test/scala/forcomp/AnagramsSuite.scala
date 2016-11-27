@@ -128,7 +128,10 @@ class AnagramsBench extends FunSuite {
 
   test("sentence anagrams: repetitive") {
     val sentence = List("repetitive")
+    assert(sentenceAnagrams(sentence).length === 529)
+    /*
     sentenceAnagrams(sentence).foreach(x => println(x.mkString(" ")))
+     */
   }
 
   test("sentence anagrams: bold grumpy cat") {
