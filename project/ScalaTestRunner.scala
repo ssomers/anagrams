@@ -15,9 +15,9 @@ object ScalaTestRunner {
     private var lines = 0
     private var lengthCropped = false
 
-    override def toString = buf.mkString("\n").trim
+    override def toString: String = buf.mkString("\n").trim
 
-    def append(s: String) =
+    def append(s: String): Unit =
       if (lines < Settings.maxOutputLines) {
         val shortS =
           if (s.length > Settings.maxOutputLineLength) {
@@ -127,7 +127,7 @@ object ScalaTestRunner {
 
   def runScalaTest(classpath: Classpath, testClasses: File, outfile: File,
                    resourceFiles: List[File], gradeOptions: Map[String, String],
-                   logError: String => Unit, instragentPath: String) = {
+                   logError: String => Unit, instragentPath: String): Unit = {
 
     // invoke scalatest in the separate process
     val classpathString = classpath map { case Attributed(file) => file.getAbsolutePath } mkString ":"

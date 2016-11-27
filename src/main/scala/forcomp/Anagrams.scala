@@ -55,7 +55,7 @@ object Anagrams {
     *
     */
   lazy val dictionaryByOccurrences: Map[Occurrences, List[Word]] = {
-    val d2: List[(Word, Occurrences)] = (for (w <- dictionary) yield (w, wordOccurrences(w)))
+    val d2: List[(Word, Occurrences)] = for (w <- dictionary) yield (w, wordOccurrences(w))
     d2.groupBy(_._2).mapValues(_.map(_._1))
     //d2.groupBy(_._2).map {case (o,pairs) => (o,pairs.map(_._1))}
   }

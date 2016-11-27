@@ -1,5 +1,5 @@
 object Settings {
-  val maxSubmitFileSize = {
+  val maxSubmitFileSize: Int = {
     val mb = 1024 * 1024
     10 * mb
   }
@@ -15,8 +15,8 @@ object Settings {
 
   // when students leave print statements in their code, they end up in the output of the
   // system process running ScalaTest (ScalaTestRunner.scala); we need some limits.
-  val maxOutputLines = 10 * 1000
-  val maxOutputLineLength = 1000
+  val maxOutputLines: Int = 10 * 1000
+  val maxOutputLineLength: Int = 1000
 
   val scalaTestReportFileProperty = "scalatest.reportFile"
   val scalaTestIndividualTestTimeoutProperty = "scalatest.individualTestTimeout"

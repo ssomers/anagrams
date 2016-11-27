@@ -5,7 +5,7 @@ import org.scalastyle._
 import com.typesafe.config.ConfigFactory
 
 object StyleChecker {
-  val maxResult = 100
+  val maxResult: Int = 100
 
   class CustomTextOutput[T <: FileSpec](stream: PrintStream) extends Output[T] {
     private val messageHelper = new MessageHelper(ConfigFactory.load())
@@ -42,7 +42,7 @@ object StyleChecker {
     }
   }
 
-  def score(outputResult: OutputResult) = {
+  def score(outputResult: OutputResult): Int = {
     val penalties = outputResult.errors + outputResult.warnings
     scala.math.max(maxResult - penalties, 0)
   }
