@@ -136,15 +136,15 @@ struct AnagramFinder {
     * Note that the order of the occurrence list subsets does not matter -- the subsets
     * in the example above could have been displayed in some other order.
     */
-    static void combinations(Occurrences const& occurrences, int start, std::vector<Occurrences>& result) {
-        if (start == occurrences.size()) {
+    static void combinations(Occurrences::const_iterator occurrencesB, Occurrences::const_iterator occurrencesE, std::vector<Occurrences>& result) {
+        if (occurrencesB == occurrencesE) {
             result.push_back(Occurrences());
             return;
         }
-        char c = occurrences[start].first;
-        int maxo = occurrences[start].second;
+        char c = (*occurrencesB).first;
+        int maxo = (*occurrencesB).second;
         std::vector<Occurrences> crest;
-        combinations(occurrences, start + 1, crest);
+        combinations(occurrencesB + 1, occurrencesE, crest);
         result.reserve(crest.size() * (1 + maxo));
         std::copy(crest.begin(), crest.end(), std::back_inserter(result));
         for (int o = 1; o <= maxo; ++o) {
@@ -168,25 +168,23 @@ struct AnagramFinder {
     * Note: the resulting value is an occurrence - meaning it is sorted
     * and has no zero-entries.
     */
-    static void subtract(Occurrences& x, int xstart, Occurrences y) {
-        if (y.empty()) return;
-        _ASSERT(!x.empty());
-        char xc = x[xstart].first;
-        int xo = x[xstart].second;
-        char yc = y[0].first;
-        int yo = y[0].second;
+    static void subtract(Occurrences& x, Occurrences::iterator xB, Occurrences::const_iterator yB, Occurrences::const_iterator yE) {
+        if (yB == yE) return;
+        _ASSERT(xB != x.end());
+        char xc = (*xB).first;
+        int xo = (*xB).second;
+        char yc = (*yB).first;
+        int yo = (*yB).second;
         if (xc == yc) {
             if (xo == yo) {
-                x.erase(x.begin() + xstart);
-                y.erase(y.begin());
-                subtract(x, xstart, y);
+                xB = x.erase(xB);
+                subtract(x, xB, yB + 1, yE);
             } else {
-                x[xstart].second -= yo;
-                y.erase(y.begin());
-                subtract(x, xstart + 1, y);
+                (*xB).second -= yo;
+                subtract(x, xB + 1, yB + 1, yE);
             }
         } else {
-            subtract(x, xstart + 1, y);
+            subtract(x, xB + 1, yB, yE);
         }
     }
 
@@ -232,7 +230,7 @@ struct AnagramFinder {
     */
     void subsentencesAfterPrefix(Occurrences const& occurrences, Occurrences const& suboccurrences, std::list<Sentence>& result) const {
         Occurrences remainingOccurrences = occurrences;
-        subtract(remainingOccurrences, 0, suboccurrences);
+        subtract(remainingOccurrences, remainingOccurrences.begin(), suboccurrences.begin(), suboccurrences.end());
         if (remainingOccurrences.empty()) {
             result.push_back(std::vector<Word>());
         } else {
@@ -242,7 +240,7 @@ struct AnagramFinder {
 
     void subsentences(Occurrences const& occurrences, std::list<Sentence>& result) const {
         std::vector<Occurrences> oc;
-        combinations(occurrences, 0, oc);
+        combinations(occurrences.begin(), occurrences.end(), oc);
         for (auto const& o : oc) {
             auto it = dbo.find(o);
             if (it != dbo.end()) {
