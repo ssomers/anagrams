@@ -5,7 +5,7 @@ import timeit
 import unittest
 
 def loadDictionary():
-    with open(os.path.join("src", "main", "resources", "forcomp", "linuxwords.txt")) as f:
+    with open(os.path.join(os.pardir, "Scala", "src", "main", "resources", "forcomp", "linuxwords.txt")) as f:
         return [line.rstrip() for line in f.readlines()]
 
 def wordOccurrences(w):

@@ -110,10 +110,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AnagramFinder.cpp" />
-    <ClCompile Include="Anagrams.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="AnagramFinder.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

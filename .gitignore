@@ -1,4 +1,7 @@
+.idea
 ipch
+__pycache__
+target
 .vs
 x86
 x64

@@ -30,7 +30,7 @@ using Occurrences = std::vector<std::pair<char, int>>;
 struct AnagramFinder {
     static std::vector<Word> loadDictionary() {
         std::vector<Word> result;
-        std::ifstream f("C:\\Users\\stein\\Documents\\Scala\\IdeaProjects\\forcomp\\src\\main\\resources\\forcomp\\linuxwords.txt");
+        std::ifstream f("..\\..\\..\\Scala\\src\\main\\resources\\forcomp\\linuxwords.txt");
         std::string line;
         while (std::getline(f, line)) {
             result.push_back(line);
@@ -264,7 +264,7 @@ struct AnagramFinder {
         //            if (l == Nil) List(List()) else l
     }
 
-    void assertAnagrams(Sentence const& sentence, int count) const {
+    bool assertAnagrams(Sentence const& sentence, int count) const {
         std::list<Sentence> anagrams;
         sentenceAnagrams(sentence, anagrams);
         if (anagrams.size() != count) {
@@ -274,7 +274,8 @@ struct AnagramFinder {
                 }
                 std::cout << "\n";
             }
+            return false;
         }
-        _ASSERT(anagrams.size() == count);
+        return true;
     }
 };

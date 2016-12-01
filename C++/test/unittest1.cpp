@@ -24,16 +24,16 @@ public:
         Assert::IsTrue((*it)[0] == "tea");
     }
     TEST_METHOD(LinuxRulez) {
-        f.assertAnagrams(Sentence{ "Linux","rulez" }, 20);
+        Assert::IsTrue(f.assertAnagrams(Sentence{ "Linux","rulez" }, 20));
     }
     TEST_METHOD(GrumpyCat) {
-        f.assertAnagrams(Sentence{ "grumpy","cat" }, 164);
+        Assert::IsTrue(f.assertAnagrams(Sentence{ "grumpy","cat" }, 164));
     }
     TEST_METHOD(GrumpyBoldCat) {
-        f.assertAnagrams(Sentence{ "grumpy","bold","cat" }, 30198);
+        Assert::IsTrue(f.assertAnagrams(Sentence{ "grumpy","bold","cat" }, 30198));
     }
     TEST_METHOD(Repetitive) {
-        f.assertAnagrams(Sentence{ "repetitive" }, 529);
+        Assert::IsTrue(f.assertAnagrams(Sentence{ "repetitive" }, 529));
     }
 #if _DEBUG
     BEGIN_TEST_METHOD_ATTRIBUTE(GrumpyCat) TEST_IGNORE() END_TEST_METHOD_ATTRIBUTE();
