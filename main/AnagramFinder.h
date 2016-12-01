@@ -59,11 +59,8 @@ struct AnagramFinder {
             occ[c] += 1;
         }
 
-        result.reserve(occ.size());
-        std::copy(occ.begin(), occ.end(), std::back_inserter(result));
-        //for (auto const& kv : occ) {
-        //    result.push_back(kv);
-        //}
+        result = Occurrences(occ.size());
+        std::copy(occ.begin(), occ.end(), result.begin());
     }
 
     /** Converts a sentence into its character occurrence list. */
@@ -145,17 +142,18 @@ struct AnagramFinder {
         int maxo = (*occurrencesB).second;
         std::vector<Occurrences> crest;
         combinations(occurrencesB + 1, occurrencesE, crest);
-        result.reserve(crest.size() * (1 + maxo));
+        size_t len = crest.size() * (1 + maxo);
+        result.reserve(len);
         std::copy(crest.begin(), crest.end(), std::back_inserter(result));
         for (int o = 1; o <= maxo; ++o) {
             for (auto const& cr : crest) {
-                Occurrences newOcc;
-                newOcc.reserve(1 + cr.size());
-                newOcc.push_back(std::make_pair(c, o));
-                std::copy(cr.begin(), cr.end(), std::back_inserter(newOcc));
-                result.push_back(newOcc);
+                Occurrences newOcc(1 + cr.size());
+                newOcc.front() = std::make_pair(c, o);
+                std::copy(cr.begin(), cr.end(), newOcc.begin() + 1);
+                result.emplace_back(newOcc);
             }
         }
+        _ASSERT(result.size() == len);
     }
 
     /** Subtracts occurrence list `y` from occurrence list `x`.
