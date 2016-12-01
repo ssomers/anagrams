@@ -1,0 +1,8 @@
+/ipch
+/.vs
+x86
+x64
+*.VC.db
+*.VC.VC.opendb
+*.vcxproj.user
+*.vcxproj.filters
