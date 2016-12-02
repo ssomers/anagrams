@@ -1,11 +1,14 @@
 #pragma once
 
+#include <algorithm>
+#include <assert.h>
 #include <fstream>
 #include <iostream>
 #include <iterator>
 #include <list>
 #include <map>
 #include <string>
+#include <utility>
 #include <vector>
 
 /** A word is simply a `String`. */
@@ -51,7 +54,7 @@ struct AnagramFinder {
     * Note: you must use `groupBy` to implement this method!
     */
     static void wordOccurrences(Word const& w, Occurrences& result) {
-        _ASSERT(result.empty());
+        assert(result.empty());
 
         std::map<char, int> occ;
         for (char c : w) {
@@ -107,7 +110,7 @@ struct AnagramFinder {
         Occurrences occ;
         wordOccurrences(w, occ);
         auto it = dictionaryByOccurrences.find(occ);
-        _ASSERT(it != dictionaryByOccurrences.end());
+        assert(it != dictionaryByOccurrences.end());
         return (*it).second;
     }
 
@@ -146,14 +149,27 @@ struct AnagramFinder {
         result.reserve(len);
         std::copy(crest.begin(), crest.end(), std::back_inserter(result));
         for (int o = 1; o <= maxo; ++o) {
-            for (auto const& cr : crest) {
+#if nextgen
+            auto it = crest.begin();
+            std::generate_n(std::back_inserter(result), crest.size(),
+                            [c, o, &it]() {
+                auto const& cr = *it;
+                ++it;
                 Occurrences newOcc(1 + cr.size());
                 newOcc.front() = std::make_pair(c, o);
                 std::copy(cr.begin(), cr.end(), newOcc.begin() + 1);
-                result.emplace_back(newOcc);
+                return newOcc;
+            });
+#else
+            for (auto const& cr : crest) {
+                result.emplace_back(Occurrences(1 + cr.size()));
+                Occurrences& newOcc = result.back();
+                newOcc.front() = std::make_pair(c, o);
+                std::copy(cr.begin(), cr.end(), newOcc.begin() + 1);
             }
+#endif
         }
-        _ASSERT(result.size() == len);
+        assert(result.size() == len);
     }
 
     /** Subtracts occurrence list `y` from occurrence list `x`.
@@ -168,7 +184,7 @@ struct AnagramFinder {
     */
     static void subtract(Occurrences& x, Occurrences::iterator xB, Occurrences::const_iterator yB, Occurrences::const_iterator yE) {
         if (yB == yE) return;
-        _ASSERT(xB != x.end());
+        assert(xB != x.end());
         char xc = (*xB).first;
         int xo = (*xB).second;
         char yc = (*yB).first;
