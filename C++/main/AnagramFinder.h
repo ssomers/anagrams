@@ -138,7 +138,7 @@ struct AnagramFinder {
     */
     static void combinations(Occurrences::const_iterator occurrencesB, Occurrences::const_iterator occurrencesE, std::vector<Occurrences>& result) {
         if (occurrencesB == occurrencesE) {
-            result.push_back(Occurrences());
+            result.emplace_back();
             return;
         }
         char c = (*occurrencesB).first;
@@ -250,7 +250,7 @@ struct AnagramFinder {
         remainingOccurrences.reserve(occurrences.size());
         subtract(remainingOccurrences, occurrences.begin(), occurrences.end(), suboccurrences.begin(), suboccurrences.end());
         if (remainingOccurrences.empty()) {
-            result.push_back(std::vector<Word>());
+            result.emplace_back();
         } else {
             subsentences(remainingOccurrences, result);
         }
@@ -266,10 +266,10 @@ struct AnagramFinder {
                     std::list<Sentence> subsentences;
                     subsentencesAfterPrefix(occurrences, o, subsentences);
                     for (auto const& subsentence : subsentences) {
-                        Sentence sentence;
-                        sentence.push_back(word);
-                        std::copy(subsentence.begin(), subsentence.end(), std::back_inserter(sentence));
-                        result.push_back(sentence);
+                        result.emplace_back(1 + subsentence.size());
+                        Sentence& sentence = result.back();
+                        sentence.front() = word;
+                        std::copy(subsentence.begin(), subsentence.end(), sentence.begin() + 1);
                     }
                 }
             }
