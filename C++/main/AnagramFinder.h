@@ -162,7 +162,7 @@ struct AnagramFinder {
             });
 #else
             for (auto const& cr : crest) {
-                result.emplace_back(Occurrences(1 + cr.size()));
+                result.emplace_back(1 + cr.size());
                 Occurrences& newOcc = result.back();
                 newOcc.front() = std::make_pair(c, o);
                 std::copy(cr.begin(), cr.end(), newOcc.begin() + 1);
