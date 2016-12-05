@@ -182,23 +182,26 @@ struct AnagramFinder {
     * Note: the resulting value is an occurrence - meaning it is sorted
     * and has no zero-entries.
     */
-    static void subtract(Occurrences& x, Occurrences::iterator xB, Occurrences::const_iterator yB, Occurrences::const_iterator yE) {
-        if (yB == yE) return;
-        assert(xB != x.end());
+    static void subtract(Occurrences& result,
+                         Occurrences::const_iterator xB, Occurrences::const_iterator xE,
+                         Occurrences::const_iterator yB, Occurrences::const_iterator yE) {
+        if (yB == yE) {
+            std::copy(xB, xE, std::back_inserter(result));
+            return;
+        }
+        assert(xB != xE);
         char xc = (*xB).first;
         int xo = (*xB).second;
         char yc = (*yB).first;
         int yo = (*yB).second;
         if (xc == yc) {
-            if (xo == yo) {
-                xB = x.erase(xB);
-                subtract(x, xB, yB + 1, yE);
-            } else {
-                (*xB).second -= yo;
-                subtract(x, xB + 1, yB + 1, yE);
+            if (xo != yo) {
+                result.emplace_back(xc, xo - yo);
             }
+            subtract(result, xB + 1, xE, yB + 1, yE);
         } else {
-            subtract(x, xB + 1, yB, yE);
+            result.emplace_back(xc, xo);
+            subtract(result, xB + 1, xE, yB, yE);
         }
     }
 
@@ -243,8 +246,9 @@ struct AnagramFinder {
     * Note: There is only one anagram of an empty sentence.
     */
     void subsentencesAfterPrefix(Occurrences const& occurrences, Occurrences const& suboccurrences, std::list<Sentence>& result) const {
-        Occurrences remainingOccurrences = occurrences;
-        subtract(remainingOccurrences, remainingOccurrences.begin(), suboccurrences.begin(), suboccurrences.end());
+        Occurrences remainingOccurrences;
+        remainingOccurrences.reserve(occurrences.size());
+        subtract(remainingOccurrences, occurrences.begin(), occurrences.end(), suboccurrences.begin(), suboccurrences.end());
         if (remainingOccurrences.empty()) {
             result.push_back(std::vector<Word>());
         } else {
